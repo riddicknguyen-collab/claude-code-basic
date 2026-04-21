@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Commerce Sales Report</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: { bg: '#090A14', card: '#13152A', border: '#1E2138', muted: '#2A2D47' },
+            primary: '#DF6B33',
+            primaryHover: '#C85A27',
+          },
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: #090A14; }
+    .card { background-color: #13152A; border: 1px solid #1E2138; border-radius: 1rem; padding: 1.5rem; }
+    .kpi-card { background-color: #13152A; border: 1px solid #1E2138; border-radius: 1rem; padding: 1.5rem; transition: border-color 0.2s; }
+    .kpi-card:hover { border-color: #DF6B33; }
+    .table-row:hover { background-color: rgba(223, 107, 51, 0.05); }
+    .table-header { border-bottom: 1px solid #1E2138; }
+    .table-header th { color: #6B7280; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .badge-green { background-color: rgba(34, 197, 94, 0.15); color: #22C55E; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; }
+    .badge-red { background-color: rgba(239, 68, 68, 0.15); color: #EF4444; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; }
+    .badge-orange { background-color: rgba(223, 107, 51, 0.15); color: #DF6B33; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; }
+    .badge-blue { background-color: rgba(59, 130, 246, 0.15); color: #3B82F6; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; }
+    nav a.active { color: #DF6B33; border-bottom: 2px solid #DF6B33; }
+    nav a:hover { color: #DF6B33; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #090A14; }
+    ::-webkit-scrollbar-thumb { background: #1E2138; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2A2D47; }
+  </style>
+</head>
+<body class="min-h-screen font-inter" style="background-color: #090A14;">
+
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-50 border-b" style="background-color: rgba(19,21,42,0.95); border-color: #1E2138; backdrop-filter: blur(12px);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-14">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: #DF6B33;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <span class="font-poppins font-bold text-white text-lg">SalesDash</span>
+        </div>
+        <div class="hidden sm:flex items-center gap-1">
+          <a href="#" class="active px-3 py-2 text-sm font-medium transition-colors" style="color: #DF6B33;">Overview</a>
+          <a href="#" class="px-3 py-2 text-sm font-medium transition-colors text-gray-400">Sales</a>
+          <a href="#" class="px-3 py-2 text-sm font-medium transition-colors text-gray-400">Marketing</a>
+          <a href="#" class="px-3 py-2 text-sm font-medium transition-colors text-gray-400">Products</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-gray-500 hidden sm:block">Jan — Dec 2025</span>
+          <button class="p-2 rounded-lg transition-colors" style="background-color: #1A1D33; color: #9CA3AF;" title="Download Report">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Page Header -->
+    <div class="mb-8">
+      <h1 class="font-poppins text-2xl font-extrabold text-white">E-Commerce Sales Report</h1>
+      <p class="text-gray-400 text-sm mt-1">Comprehensive business performance overview for 2025</p>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+
+      <div class="kpi-card">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Total Revenue</span>
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(223,107,51,0.15);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DF6B33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+        </div>
+        <p class="font-poppins text-2xl font-bold text-white">$2,847,390</p>
+        <div class="flex items-center gap-1 mt-2">
+          <span class="badge-green">+12.5%</span>
+          <span class="text-xs text-gray-500">vs last year</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Total Orders</span>
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(59,130,246,0.15);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          </div>
+        </div>
+        <p class="font-poppins text-2xl font-bold text-white">18,432</p>
+        <div class="flex items-center gap-1 mt-2">
+          <span class="badge-green">+8.3%</span>
+          <span class="text-xs text-gray-500">vs last year</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Avg Order Value</span>
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(34,197,94,0.15);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+        </div>
+        <p class="font-poppins text-2xl font-bold text-white">$154.47</p>
+        <div class="flex items-center gap-1 mt-2">
+          <span class="badge-green">+3.9%</span>
+          <span class="text-xs text-gray-500">vs last year</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Conversion Rate</span>
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(168,85,247,0.15);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+          </div>
+        </div>
+        <p class="font-poppins text-2xl font-bold text-white">3.24%</p>
+        <div class="flex items-center gap-1 mt-2">
+          <span class="badge-red">-0.4%</span>
+          <span class="text-xs text-gray-500">vs last year</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+
+      <div class="lg:col-span-2 card">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="font-poppins font-bold text-white text-base">Revenue Trend</h2>
+            <p class="text-gray-500 text-xs mt-0.5">Monthly revenue over the past 12 months</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="px-3 py-1.5 rounded-lg text-xs font-medium" style="background-color: #DF6B33; color: white;">Monthly</button>
+            <button class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-400" style="background-color: #1A1D33;">Weekly</button>
+          </div>
+        </div>
+        <canvas id="revenueChart"></canvas>
+      </div>
+
+      <div class="card">
+        <div class="mb-6">
+          <h2 class="font-poppins font-bold text-white text-base">Sales by Category</h2>
+          <p class="text-gray-500 text-xs mt-0.5">Revenue distribution across product categories</p>
+        </div>
+        <canvas id="categoryChart"></canvas>
+      </div>
+
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+
+      <div class="card">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="font-poppins font-bold text-white text-base">Orders by Month</h2>
+            <p class="text-gray-500 text-xs mt-0.5">Order volume comparison 2024 vs 2025</p>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="flex items-center gap-1.5">
+              <div class="w-2.5 h-2.5 rounded-full" style="background-color: #3B82F6;"></div>
+              <span class="text-xs text-gray-500">2024</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <div class="w-2.5 h-2.5 rounded-full" style="background-color: #DF6B33;"></div>
+              <span class="text-xs text-gray-500">2025</span>
+            </div>
+          </div>
+        </div>
+        <canvas id="ordersChart"></canvas>
+      </div>
+
+      <div class="card">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="font-poppins font-bold text-white text-base">Traffic Sources</h2>
+            <p class="text-gray-500 text-xs mt-0.5">Visitor acquisition channels</p>
+          </div>
+          <span class="badge-orange">Total: 568K</span>
+        </div>
+        <canvas id="trafficChart"></canvas>
+      </div>
+
+    </div>
+
+    <!-- Tables Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+
+      <div class="card overflow-hidden">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="font-poppins font-bold text-white text-base">Top Selling Products</h2>
+            <p class="text-gray-500 text-xs mt-0.5">Best performing products by revenue</p>
+          </div>
+          <a href="#" class="text-xs font-medium transition-colors" style="color: #DF6B33;">View all</a>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="table-header">
+              <tr>
+                <th class="text-left py-3 px-3 font-medium">Product</th>
+                <th class="text-right py-3 px-3 font-medium">Revenue</th>
+                <th class="text-right py-3 px-3 font-medium">Units</th>
+                <th class="text-right py-3 px-3 font-medium">Trend</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-row border-b transition-colors" style="border-color: #1E2138;">
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #1A1D33;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+                    </div>
+                    <div>
+                      <p class="text-white font-medium text-xs">Wireless Headphones Pro</p>
+                      <p class="text-gray-500 text-xs">Electronics</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-right text-white font-medium text-xs">$124,580</td>
+                <td class="py-3 px-3 text-right text-gray-400 text-xs">2,156</td>
+                <td class="py-3 px-3 text-right"><span class="badge-green">+18%</span></td>
+              </tr>
+              <tr class="table-row border-b transition-colors" style="border-color: #1E2138;">
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #1A1D33;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/><path d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83"/></svg>
+                    </div>
+                    <div>
+                      <p class="text-white font-medium text-xs">Smart Watch Series 5</p>
+                      <p class="text-gray-500 text-xs">Electronics</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-right text-white font-medium text-xs">$98,340</td>
+                <td class="py-3 px-3 text-right text-gray-400 text-xs">1,892</td>
+                <td class="py-3 px-3 text-right"><span class="badge-green">+12%</span></td>
+              </tr>
+              <tr class="table-row border-b transition-colors" style="border-color: #1E2138;">
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #1A1D33;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-5"/><path d="M12 20v-6"/><path d="M12 14v-4"/><path d="M8 20v-8"/><path d="M16 20v-3"/></svg>
+                    </div>
+                    <div>
+                      <p class="text-white font-medium text-xs">Premium Backpack XL</p>
+                      <p class="text-gray-500 text-xs">Fashion</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-right text-white font-medium text-xs">$76,890</td>
+                <td class="py-3 px-3 text-right text-gray-400 text-xs">1,445</td>
+                <td class="py-3 px-3 text-right"><span class="badge-green">+7%</span></td>
+              </tr>
+              <tr class="table-row border-b transition-colors" style="border-color: #1E2138;">
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #1A1D33;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <div>
+                      <p class="text-white font-medium text-xs">Organic Skincare Set</p>
+                      <p class="text-gray-500 text-xs">Beauty</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-right text-white font-medium text-xs">$62,150</td>
+                <td class="py-3 px-3 text-right text-gray-400 text-xs">2,089</td>
+                <td class="py-3 px-3 text-right"><span class="badge-red">-3%</span></td>
+              </tr>
+              <tr class="table-row transition-colors">
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: #1A1D33;">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                    </div>
+                    <div>
+                      <p class="text-white font-medium text-xs">Espresso Machine Elite</p>
+                      <p class="text-gray-500 text-xs">Home & Kitchen</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-right text-white font-medium text-xs">$54,670</td>
+                <td class="py-3 px-3 text-right text-gray-400 text-xs">876</td>
+                <td class="py-3 px-3 text-right"><span class="badge-green">+22%</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card overflow-hidden">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="font-poppins font-bold text-white text-base">Marketing Metrics</h2>
+            <p class="text-gray-500 text-xs mt-0.5">Campaign performance summary</p>
+          </div>
+          <a href="#" class="text-xs font-medium transition-colors" style="color: #DF6B33;">View all</a>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="table-header">
+              <tr>
+                <th class="text-left py-3 px-3 font-medium">Campaign</th>
+                <th class="text-right py-3 px-3 font-medium">Spend</th>
+                <th class="text-right py-3 px-3 font-medium">ROAS</th>
+                <th class="text-right py-3 px-3 font-medium">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-row border-b transition-colors" style="border-color: #1E2138;">
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full" style="background-color: #3B82F6;"></div>
+                    <span class="text-white font-medium text-xs">Google Ads — Search</span>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-right text-gray-400 text-xs">$18,400</td>
+                <td class="py-3 px-3 text-right text-white font-medium text-xs">4.2x</td>
+                <td class="py-3 px-3 text-right"><span class="badge-green">Active</span></td>
+              </tr>
+              <tr class="table-row border-b transition-colors" style="border-color: #1E2138;">
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full" style="background-color: #22C55E;"></div>
+                    <span class="text-white font-medium text-xs">Facebook — Retargeting</span>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-right text-gray-400 text-xs">$12,800</td>
+                <td class="py-3 px-3 text-right text-white font-medium text-xs">5.8x</td>
+                <td class="py-3 px-3 text-right"><span class="badge-green">Active</span></td>
+              </tr>
+              <tr class="table-row border-b transition-colors" style="border-color: #1E2138;">
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full" style="background-color: #A855F7;"></div>
+                    <span class="text-white font-medium text-xs">Instagram — Influencer</span>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-right text-gray-400 text-xs">$9,500</td>
+                <td class="py-3 px-3 text-right text-white font-medium text-xs">3.9x</td>
+                <td class="py-3 px-3 text-right"><span class="badge-green">Active</span></td>
+              </tr>
+              <tr class="table-row border-b transition-colors" style="border-color: #1E2138;">
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full" style="background-color: #F59E0B;"></div>
+                    <span class="text-white font-medium text-xs">Email — Newsletter</span>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-right text-gray-400 text-xs">$3,200</td>
+                <td class="py-3 px-3 text-right text-white font-medium text-xs">12.4x</td>
+                <td class="py-3 px-3 text-right"><span class="badge-green">Active</span></td>
+              </tr>
+              <tr class="table-row border-b transition-colors" style="border-color: #1E2138;">
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full" style="background-color: #EF4444;"></div>
+                    <span class="text-white font-medium text-xs">TikTok — Brand Awareness</span>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-right text-gray-400 text-xs">$7,100</td>
+                <td class="py-3 px-3 text-right text-gray-400 text-xs">2.1x</td>
+                <td class="py-3 px-3 text-right"><span class="badge-red">Paused</span></td>
+              </tr>
+              <tr class="table-row transition-colors" style="border-color: #1E2138;">
+                <td class="py-3 px-3">
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full" style="background-color: #06B6D4;"></div>
+                    <span class="text-white font-medium text-xs">SEO — Content Marketing</span>
+                  </div>
+                </td>
+                <td class="py-3 px-3 text-right text-gray-400 text-xs">$5,600</td>
+                <td class="py-3 px-3 text-right text-white font-medium text-xs">8.7x</td>
+                <td class="py-3 px-3 text-right"><span class="badge-green">Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Customer Metrics -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="card">
+        <h2 class="font-poppins font-bold text-white text-base mb-1">New vs Returning</h2>
+        <p class="text-gray-500 text-xs mb-4">Customer composition</p>
+        <canvas id="customerChart"></canvas>
+      </div>
+      <div class="card">
+        <h2 class="font-poppins font-bold text-white text-base mb-1">Revenue by Region</h2>
+        <p class="text-gray-500 text-xs mb-4">Geographic performance</p>
+        <canvas id="regionChart"></canvas>
+      </div>
+      <div class="card">
+        <h2 class="font-poppins font-bold text-white text-base mb-1">Device Breakdown</h2>
+        <p class="text-gray-500 text-xs mb-4">Traffic by device type</p>
+        <canvas id="deviceChart"></canvas>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="https://unpkg.com/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
+    const { Chart, registerables } = window;
+    Chart.register(...registerables);
+
+    const C = {
+      primary: '#DF6B33',
+      blue: '#3B82F6',
+      green: '#22C55E',
+      purple: '#A855F7',
+      yellow: '#F59E0B',
+      cyan: '#06B6D4',
+      red: '#EF4444',
+      grid: '#1E2138',
+      text: '#9CA3AF',
+      card: '#1A1D33',
+    };
+
+    const tooltipDefaults = {
+      backgroundColor: C.card,
+      borderColor: C.grid,
+      borderWidth: 1,
+      titleColor: '#E5E7EB',
+      bodyColor: C.text,
+      padding: 12,
+      cornerRadius: 8,
+    };
+
+    // ——— Revenue Trend (Line) ———
+    new Chart(document.getElementById('revenueChart'), {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [
+          {
+            label: 'Revenue',
+            data: [185400, 198700, 215300, 208900, 234600, 251800, 228400, 246200, 263500, 289100, 315400, 210100],
+            borderColor: C.primary,
+            backgroundColor: C.primary + '20',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 2.5,
+            pointRadius: 3,
+            pointBackgroundColor: C.primary,
+            pointBorderColor: C.card,
+            pointBorderWidth: 2,
+            yAxisID: 'y',
+          },
+          {
+            label: 'Orders',
+            data: [1240, 1310, 1440, 1380, 1560, 1680, 1520, 1640, 1750, 1920, 2090, 1902],
+            borderColor: C.blue,
+            backgroundColor: 'transparent',
+            fill: false,
+            tension: 0.4,
+            borderWidth: 2,
+            pointRadius: 3,
+            pointBackgroundColor: C.blue,
+            pointBorderColor: C.card,
+            pointBorderWidth: 2,
+            yAxisID: 'y1',
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            labels: { color: C.text, font: { family: 'Inter', size: 11 }, boxWidth: 12, padding: 16 },
+          },
+          tooltip: { ...tooltipDefaults, callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.dataset.label === 'Revenue' ? '$' : ''}${ctx.parsed.y.toLocaleString()}` } },
+        },
+        scales: {
+          x: { grid: { color: C.grid, drawBorder: false }, ticks: { color: C.text, font: { family: 'Inter', size: 11 } }, border: { display: false } },
+          y: { position: 'left', grid: { color: C.grid, drawBorder: false }, ticks: { color: C.text, font: { family: 'Inter', size: 10 }, callback: (v) => `$${(v / 1000).toFixed(0)}K` }, border: { display: false } },
+          y1: { position: 'right', grid: { display: false }, ticks: { color: C.text, font: { family: 'Inter', size: 10 } }, border: { display: false } },
+        },
+      },
+    });
+
+    // ——— Sales by Category (Doughnut) ———
+    new Chart(document.getElementById('categoryChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Electronics', 'Fashion', 'Beauty', 'Home & Kitchen', 'Sports'],
+        datasets: [{
+          data: [38, 24, 16, 14, 8],
+          backgroundColor: [C.primary, C.blue, C.purple, C.green, C.yellow],
+          borderColor: '#13152A',
+          borderWidth: 3,
+          hoverOffset: 6,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '62%',
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: { color: '#D1D5DB', font: { family: 'Inter', size: 11 }, boxWidth: 8, padding: 10, generateLabels: (chart) => {
+              const { data } = chart;
+              return chart.data.labels.map((label, i) => ({
+                text: `${label}  ${data.datasets[0].data[i]}%`,
+                fillStyle: data.datasets[0].backgroundColor[i],
+                strokeStyle: data.datasets[0].backgroundColor[i],
+                hidden: false,
+                index: i,
+              }));
+            }},
+          },
+          tooltip: { ...tooltipDefaults, callbacks: { label: (ctx) => ` ${ctx.parsed}%` } },
+        },
+      },
+    });
+
+    // ——— Orders by Month (Grouped Bar) ———
+    new Chart(document.getElementById('ordersChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [
+          {
+            label: '2024',
+            data: [1080, 1150, 1290, 1220, 1380, 1490, 1340, 1450, 1560, 1700, 1850, 1680],
+            backgroundColor: C.blue,
+            borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 4, bottomRight: 4 },
+            borderSkipped: false,
+          },
+          {
+            label: '2025',
+            data: [1240, 1310, 1440, 1380, 1560, 1680, 1520, 1640, 1750, 1920, 2090, 1902],
+            backgroundColor: C.primary,
+            borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 4, bottomRight: 4 },
+            borderSkipped: false,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { ...tooltipDefaults },
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: C.text, font: { family: 'Inter', size: 11 } }, border: { display: false } },
+          y: { grid: { color: C.grid, drawBorder: false }, ticks: { color: C.text, font: { family: 'Inter', size: 10 } }, border: { display: false } },
+        },
+      },
+    });
+
+    // ——— Traffic Sources (Horizontal Bar) ———
+    new Chart(document.getElementById('trafficChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Organic Search', 'Direct', 'Social Media', 'Paid Ads', 'Email', 'Referral'],
+        datasets: [{
+          data: [198400, 142000, 95600, 78400, 35600, 18000],
+          backgroundColor: [C.green, C.blue, C.purple, C.primary, C.yellow, C.cyan],
+          borderRadius: { topLeft: 0, topRight: 4, bottomRight: 4, bottomLeft: 0 },
+          borderSkipped: false,
+        }],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { ...tooltipDefaults, callbacks: { label: (ctx) => ` ${ctx.parsed.x.toLocaleString()} visitors` } },
+        },
+        scales: {
+          x: { grid: { color: C.grid, drawBorder: false }, ticks: { color: C.text, font: { family: 'Inter', size: 10 }, callback: (v) => `${(v / 1000).toFixed(0)}K` }, border: { display: false } },
+          y: { grid: { display: false }, ticks: { color: C.text, font: { family: 'Inter', size: 11 } }, border: { display: false } },
+        },
+      },
+    });
+
+    // ——— Customer Pie (New vs Returning) ———
+    new Chart(document.getElementById('customerChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['New Customers', 'Returning'],
+        datasets: [{
+          data: [42, 58],
+          backgroundColor: [C.primary, C.blue],
+          borderColor: '#13152A',
+          borderWidth: 3,
+          hoverOffset: 4,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '62%',
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: { color: '#D1D5DB', font: { family: 'Inter', size: 11 }, boxWidth: 8, padding: 10 },
+          },
+          tooltip: { ...tooltipDefaults, callbacks: { label: (ctx) => ` ${ctx.parsed}%` } },
+        },
+      },
+    });
+
+    // ——— Region (Horizontal Bar) ———
+    new Chart(document.getElementById('regionChart'), {
+      type: 'bar',
+      data: {
+        labels: ['North America', 'Europe', 'Asia Pacific', 'Latin America', 'Middle East'],
+        datasets: [{
+          data: [1138956, 797468, 626825, 198917, 85622],
+          backgroundColor: [C.primary, C.blue, C.green, C.purple, C.yellow],
+          borderRadius: { topLeft: 0, topRight: 4, bottomRight: 4, bottomLeft: 0 },
+          borderSkipped: false,
+        }],
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { ...tooltipDefaults, callbacks: { label: (ctx) => ` $${ctx.parsed.x.toLocaleString()}` } },
+        },
+        scales: {
+          x: { grid: { color: C.grid, drawBorder: false }, ticks: { color: C.text, font: { family: 'Inter', size: 10 }, callback: (v) => `$${(v / 1000).toFixed(0)}K` }, border: { display: false } },
+          y: { grid: { display: false }, ticks: { color: C.text, font: { family: 'Inter', size: 10 } }, border: { display: false } },
+        },
+      },
+    });
+
+    // ——— Device Breakdown (Pie) ———
+    new Chart(document.getElementById('deviceChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Mobile', 'Desktop', 'Tablet'],
+        datasets: [{
+          data: [58, 35, 7],
+          backgroundColor: [C.primary, C.blue, C.green],
+          borderColor: '#13152A',
+          borderWidth: 3,
+          hoverOffset: 4,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '62%',
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: { color: '#D1D5DB', font: { family: 'Inter', size: 11 }, boxWidth: 8, padding: 10 },
+          },
+          tooltip: { ...tooltipDefaults, callbacks: { label: (ctx) => ` ${ctx.parsed}%` } },
+        },
+      },
+    });
+  </script>
+
+</body>
+</html>
