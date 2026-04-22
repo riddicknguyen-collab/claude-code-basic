@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products Dashboard</title>
+  <link rel="icon" href="data:,">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = { theme: { extend: { colors: { dark: { bg: '#090A14', card: '#13152A', border: '#1E2138', muted: '#2A2D47' }, primary: '#DF6B33', primaryHover: '#C85A27' }, fontFamily: { poppins: ['Poppins', 'sans-serif'], inter: ['Inter', 'sans-serif'] } } } }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: #090A14; }
+    .card { background-color: #13152A; border: 1px solid #1E2138; border-radius: 1rem; padding: 1.5rem; }
+    .kpi-card { background-color: #13152A; border: 1px solid #1E2138; border-radius: 1rem; padding: 1.5rem; transition: border-color 0.2s; }
+    .kpi-card:hover { border-color: #DF6B33; }
+    .table-row:hover { background-color: rgba(223, 107, 51, 0.05); }
+    .table-header { border-bottom: 1px solid #1E2138; }
+    .table-header th { color: #6B7280; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .badge-green { background-color: rgba(34, 197, 94, 0.15); color: #22C55E; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; }
+    .badge-red { background-color: rgba(239, 68, 68, 0.15); color: #EF4444; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; }
+    .badge-orange { background-color: rgba(223, 107, 51, 0.15); color: #DF6B33; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; }
+    .badge-blue { background-color: rgba(59, 130, 246, 0.15); color: #3B82F6; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; }
+    nav a.active { color: #DF6B33; border-bottom: 2px solid #DF6B33; }
+    nav a:hover { color: #DF6B33; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #090A14; }
+    ::-webkit-scrollbar-thumb { background: #1E2138; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2A2D47; }
+    svg text { user-select: none; }
+  </style>
+</head>
+<body class="min-h-screen font-inter" style="background-color: #090A14;">
+
+  <nav class="sticky top-0 z-50 border-b" style="background-color: rgba(19,21,42,0.95); border-color: #1E2138; backdrop-filter: blur(12px);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-14">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: #DF6B33;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+          <span class="font-poppins font-bold text-white text-lg">SalesDash</span>
+        </div>
+        <div class="hidden sm:flex items-center gap-1">
+          <a href="charts.html" class="px-3 py-2 text-sm font-medium transition-colors text-gray-400">Overview</a>
+          <a href="sales.html" class="px-3 py-2 text-sm font-medium transition-colors text-gray-400">Sales</a>
+          <a href="marketing.html" class="px-3 py-2 text-sm font-medium transition-colors text-gray-400">Marketing</a>
+          <a href="products.html" class="active px-3 py-2 text-sm font-medium transition-colors" style="color: #DF6B33;">Products</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-gray-500 hidden sm:block">Jan — Dec 2025</span>
+          <button class="p-2 rounded-lg transition-colors" style="background-color: #1A1D33; color: #9CA3AF;" title="Download Report"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8"><h1 class="font-poppins text-2xl font-extrabold text-white">Products Dashboard</h1><p class="text-gray-400 text-sm mt-1">Inventory health, product performance, and category insights for 2025</p></div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="kpi-card"><div class="flex items-center justify-between mb-3"><span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Total SKUs</span><div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(223,107,51,0.15);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DF6B33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div></div><p class="font-poppins text-2xl font-bold text-white">1,248</p><div class="flex items-center gap-1 mt-2"><span class="badge-green">+86</span><span class="text-xs text-gray-500">new this year</span></div></div>
+      <div class="kpi-card"><div class="flex items-center justify-between mb-3"><span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Total Revenue</span><div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(59,130,246,0.15);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div></div><p class="font-poppins text-2xl font-bold text-white">$2,847,390</p><div class="flex items-center gap-1 mt-2"><span class="badge-green">+12.5%</span><span class="text-xs text-gray-500">vs last year</span></div></div>
+      <div class="kpi-card"><div class="flex items-center justify-between mb-3"><span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Units Sold</span><div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(34,197,94,0.15);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div></div><p class="font-poppins text-2xl font-bold text-white">184,320</p><div class="flex items-center gap-1 mt-2"><span class="badge-green">+8.3%</span><span class="text-xs text-gray-500">vs last year</span></div></div>
+      <div class="kpi-card"><div class="flex items-center justify-between mb-3"><span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Stock Level</span><div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(168,85,247,0.15);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div></div><p class="font-poppins text-2xl font-bold text-white">72.4%</p><div class="flex items-center gap-1 mt-2"><span class="badge-orange">Avg fill rate</span></div></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div class="lg:col-span-2 card">
+        <div class="flex items-center justify-between mb-6"><div><h2 class="font-poppins font-bold text-white text-base">Revenue by Category</h2><p class="text-gray-500 text-xs mt-0.5">Monthly revenue per product category</p></div><div class="flex items-center gap-4"><div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full" style="background-color:#3B82F6;"></div><span class="text-xs text-gray-500">Electronics</span></div><div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full" style="background-color:#DF6B33;"></div><span class="text-xs text-gray-500">Fashion</span></div></div></div>
+        <div id="categoryRevChart" style="height:300px;position:relative;"></div>
+      </div>
+      <div class="card"><div class="mb-6"><h2 class="font-poppins font-bold text-white text-base">Category Share</h2><p class="text-gray-500 text-xs mt-0.5">Revenue distribution</p></div><div id="categoryShareChart" style="height:300px;position:relative;"></div></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div class="card overflow-hidden">
+        <div class="flex items-center justify-between mb-4"><div><h2 class="font-poppins font-bold text-white text-base">Top Products by Revenue</h2><p class="text-gray-500 text-xs mt-0.5">Best performing SKUs</p></div><a href="#" class="text-xs font-medium" style="color:#DF6B33;">All products</a></div>
+        <div class="overflow-x-auto"><table class="w-full text-sm"><thead class="table-header"><tr><th class="text-left py-3 px-3 font-medium">Product</th><th class="text-right py-3 px-3 font-medium">Revenue</th><th class="text-right py-3 px-3 font-medium">Units</th><th class="text-right py-3 px-3 font-medium">Margin</th></tr></thead><tbody>
+          <tr class="table-row border-b" style="border-color:#1E2138;"><td class="py-3 px-3"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color:#1A1D33;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></div><div><p class="text-white font-medium text-xs">Wireless Headphones Pro</p><p class="text-gray-500 text-xs">SKU: ELEC-001</p></div></div></td><td class="py-3 px-3 text-right text-white font-medium text-xs">$124,580</td><td class="py-3 px-3 text-right text-gray-400 text-xs">2,156</td><td class="py-3 px-3 text-right"><span class="badge-green">42%</span></td></tr>
+          <tr class="table-row border-b" style="border-color:#1E2138;"><td class="py-3 px-3"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color:#1A1D33;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><polyline points="12 9 12 12 13.5 13.5"/><path d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.35a2 2 0 0 1 2 1.82l.35 3.83"/></svg></div><div><p class="text-white font-medium text-xs">Smart Watch Series 5</p><p class="text-gray-500 text-xs">SKU: ELEC-002</p></div></div></td><td class="py-3 px-3 text-right text-white font-medium text-xs">$98,340</td><td class="py-3 px-3 text-right text-gray-400 text-xs">1,892</td><td class="py-3 px-3 text-right"><span class="badge-green">38%</span></td></tr>
+          <tr class="table-row border-b" style="border-color:#1E2138;"><td class="py-3 px-3"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color:#1A1D33;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 20H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-5"/><path d="M12 20v-6"/><path d="M12 14v-4"/></svg></div><div><p class="text-white font-medium text-xs">Premium Backpack XL</p><p class="text-gray-500 text-xs">SKU: FASH-001</p></div></div></td><td class="py-3 px-3 text-right text-white font-medium text-xs">$76,890</td><td class="py-3 px-3 text-right text-gray-400 text-xs">1,445</td><td class="py-3 px-3 text-right"><span class="badge-green">35%</span></td></tr>
+          <tr class="table-row border-b" style="border-color:#1E2138;"><td class="py-3 px-3"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color:#1A1D33;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><p class="text-white font-medium text-xs">Organic Skincare Set</p><p class="text-gray-500 text-xs">SKU: BEAU-001</p></div></div></td><td class="py-3 px-3 text-right text-white font-medium text-xs">$62,150</td><td class="py-3 px-3 text-right text-gray-400 text-xs">2,089</td><td class="py-3 px-3 text-right"><span class="badge-orange">28%</span></td></tr>
+          <tr class="table-row" style="border-color:#1E2138;"><td class="py-3 px-3"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color:#1A1D33;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 0 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div><div><p class="text-white font-medium text-xs">Espresso Machine Elite</p><p class="text-gray-500 text-xs">SKU: HOME-001</p></div></div></td><td class="py-3 px-3 text-right text-white font-medium text-xs">$54,670</td><td class="py-3 px-3 text-right text-gray-400 text-xs">876</td><td class="py-3 px-3 text-right"><span class="badge-green">48%</span></td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="card overflow-hidden">
+        <div class="flex items-center justify-between mb-4"><div><h2 class="font-poppins font-bold text-white text-base">Inventory Status</h2><p class="text-gray-500 text-xs mt-0.5">Stock levels across all SKUs</p></div><a href="#" class="text-xs font-medium" style="color:#DF6B33;">Reorder</a></div>
+        <div class="overflow-x-auto"><table class="w-full text-sm"><thead class="table-header"><tr><th class="text-left py-3 px-3 font-medium">SKU</th><th class="text-right py-3 px-3 font-medium">Stock</th><th class="text-right py-3 px-3 font-medium">Status</th><th class="text-right py-3 px-3 font-medium">Turnover</th></tr></thead><tbody>
+          <tr class="table-row border-b" style="border-color:#1E2138;"><td class="py-3 px-3"><span class="text-white font-medium text-xs">ELEC-001</span><p class="text-gray-500 text-xs">Wireless Headphones Pro</p></td><td class="py-3 px-3 text-right text-white font-medium text-xs">342</td><td class="py-3 px-3 text-right"><span class="badge-green">In Stock</span></td><td class="py-3 px-3 text-right"><span class="badge-blue">High</span></td></tr>
+          <tr class="table-row border-b" style="border-color:#1E2138;"><td class="py-3 px-3"><span class="text-white font-medium text-xs">ELEC-002</span><p class="text-gray-500 text-xs">Smart Watch Series 5</p></td><td class="py-3 px-3 text-right text-white font-medium text-xs">89</td><td class="py-3 px-3 text-right"><span class="badge-red">Low Stock</span></td><td class="py-3 px-3 text-right"><span class="badge-blue">High</span></td></tr>
+          <tr class="table-row border-b" style="border-color:#1E2138;"><td class="py-3 px-3"><span class="text-white font-medium text-xs">FASH-001</span><p class="text-gray-500 text-xs">Premium Backpack XL</p></td><td class="py-3 px-3 text-right text-white font-medium text-xs">1,240</td><td class="py-3 px-3 text-right"><span class="badge-green">In Stock</span></td><td class="py-3 px-3 text-right"><span class="badge-orange">Med</span></td></tr>
+          <tr class="table-row border-b" style="border-color:#1E2138;"><td class="py-3 px-3"><span class="text-white font-medium text-xs">BEAU-001</span><p class="text-gray-500 text-xs">Organic Skincare Set</p></td><td class="py-3 px-3 text-right text-gray-400 text-xs">0</td><td class="py-3 px-3 text-right"><span class="badge-red">Out of Stock</span></td><td class="py-3 px-3 text-right"><span class="badge-blue">High</span></td></tr>
+          <tr class="table-row" style="border-color:#1E2138;"><td class="py-3 px-3"><span class="text-white font-medium text-xs">HOME-001</span><p class="text-gray-500 text-xs">Espresso Machine Elite</p></td><td class="py-3 px-3 text-right text-white font-medium text-xs">567</td><td class="py-3 px-3 text-right"><span class="badge-green">In Stock</span></td><td class="py-3 px-3 text-right"><span class="badge-green">Normal</span></td></tr>
+        </tbody></table></div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div class="card">
+        <div class="flex items-center justify-between mb-6"><div><h2 class="font-poppins font-bold text-white text-base">Units Sold by Category</h2><p class="text-gray-500 text-xs mt-0.5">Monthly volume comparison</p></div></div>
+        <div id="unitsChart" style="height:280px;position:relative;"></div>
+      </div>
+      <div class="card">
+        <div class="flex items-center justify-between mb-6"><div><h2 class="font-poppins font-bold text-white text-base">Product Ratings</h2><p class="text-gray-500 text-xs mt-0.5">Average rating by category</p></div></div>
+        <div id="ratingsChart" style="height:280px;position:relative;"></div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="card"><h2 class="font-poppins font-bold text-white text-base mb-1">Gross Margin</h2><p class="text-gray-500 text-xs mb-4">By product category</p><div id="marginChart" style="height:200px;position:relative;"></div></div>
+      <div class="card"><h2 class="font-poppins font-bold text-white text-base mb-1">Return Rate</h2><p class="text-gray-500 text-xs mb-4">Returns as % of sales</p><div id="returnChart" style="height:200px;position:relative;"></div></div>
+      <div class="card"><h2 class="font-poppins font-bold text-white text-base mb-1">New vs Discontinued</h2><p class="text-gray-500 text-xs mb-4">Product lifecycle</p><div id="lifecycleChart" style="height:200px;position:relative;"></div></div>
+    </div>
+  </main>
+
+  <script>
+var P='#DF6B33',B='#3B82F6',CL='</text>',TQ='"',G="#22C55E",PU="#A855F7",Y="#F59E0B",C2="#06B6D4",GR="#1E2138",TX="#9CA3AF";
+
+function lineChart(id,W,H,opts){
+var data=opts.data,labels=opts.labels;
+var pad={t:24,r:20,b:44,l:58};
+var w=W-pad.l-pad.r,h=H-pad.t-pad.b;
+var max=Math.max.apply(null,data)*1.12;
+var grid="",paths="",xLabs="",legend="";
+for(var i=0;i<=5;i++){
+var y=pad.t+(i/5)*h;
+var val=max-(i/5)*max;
+grid+='<line x1="'+pad.l+'" y1="'+y+'" x2="'+(pad.l+w)+'" y2="'+y+'" stroke="'+GR+'" stroke-width="1"/>';
+  grid+='<text x="'+(pad.l-6)+'" y="'+(y+4)+'" text-anchor="end" fill="'+TX+'" font-size="10" font-family="Inter,sans-serif">'+(opts.fmt?opts.fmt(val):Math.round(val))+CL;
+}
+var pts=data.map(function(v,i){return (pad.l+(i/(data.length-1))*w+','+(pad.t+h-(v/max)*h));}).join(' ');
+paths+='<polyline points="'+pts+'" fill="none" stroke="'+opts.color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+data.forEach(function(v,i){
+var cx=pad.l+(i/(data.length-1))*w,cy=pad.t+h-(v/max)*h;
+paths+='<circle cx="'+cx+'" cy="'+cy+'" r="3.5" fill="'+opts.color+'" stroke="#1A1D33" stroke-width="2"/>';
+});
+labels.forEach(function(l,i){if(data.length<=6||i%2===0)xLabs+='<text x="'+(pad.l+(i/(data.length-1))*w)+'" y="'+(pad.t+h+18)+'" text-anchor="middle" fill="'+TX+'" font-size="10" font-family="Inter,sans-serif">'+l+'</text>';});
+if(opts.legend){legend='<line x1="'+pad.l+'" y1="'+(pad.t-12)+'" x2="'+(pad.l+14)+'" y2="'+(pad.t-12)+'" stroke="'+opts.color+'" stroke-width="2.5"/><text x="'+(pad.l+18)+'" y="'+(pad.t-8)+'" fill="'+TX+'" font-size="11" font-family="Inter,sans-serif">'+opts.legend+'</text>';}
+document.getElementById(id).innerHTML='<svg width="100%" height="100%" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">'+grid+paths+xLabs+legend+'</svg>';
+}
+
+function barChart(id,W,H,opts){
+var labels=opts.labels,datasets=opts.datasets;
+var pad={t:12,r:12,b:44,l:12};
+var w=W-pad.l-pad.r,h=H-pad.t-pad.b;
+var max=Math.max.apply(null,datasets.map(function(d){return Math.max.apply(null,d.data);}))*1.1;
+var gW=w/labels.length,bW=(gW*0.7)/datasets.length;
+var grid="",bars="";
+for(var i=0;i<=5;i++){
+var y=pad.t+(i/5)*h;
+grid+='<line x1="'+pad.l+'" y1="'+y+'" x2="'+(pad.l+w)+'" y2="'+y+'" stroke="'+GR+'" stroke-width="1"/>';
+grid+='<text x="'+(pad.l-4)+'" y="'+(y+4)+'" text-anchor="end" fill="'+TX+'" font-size="10" font-family="Inter,sans-serif">'+(max-(i/5)*max).toFixed(0)+'</text>';
+}
+labels.forEach(function(l,li){
+var gx=pad.l+li*gW+gW*0.15;
+datasets.forEach(function(ds,di){
+var bh=(ds.data[li]/max)*h;
+bars+='<rect x="'+(gx+di*bW)+'" y="'+(pad.t+h-bh)+'" width="'+(bW-2)+'" height="'+bh+'" rx="4" fill="'+ds.color+'"/>';
+});
+bars+='<text x="'+(gx+(datasets.length*bW)/2)+'" y="'+(pad.t+h+18)+'" text-anchor="middle" fill="'+TX+'" font-size="10" font-family="Inter,sans-serif">'+l+'</text>';
+});
+document.getElementById(id).innerHTML='<svg width="100%" height="100%" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">'+grid+bars+'</svg>';
+}
+
+function pieChart(id,W,H,opts){
+var items=opts.items,ir=opts.innerR||0;
+var cx=W/2,cy=ir>0?H/2-20:H/2;
+var r=Math.min(cx,cy)-10;
+var total=items.reduce(function(s,i){return s+i.value;},0);
+var paths="",leg="",a=-90;
+items.forEach(function(item){
+var theta=(item.value/total)*360;
+var sa=a*Math.PI/180,ea=(a+theta)*Math.PI/180;
+var x1=cx+r*Math.cos(sa),y1=cy+r*Math.sin(sa),x2=cx+r*Math.cos(ea),y2=cy+r*Math.sin(ea);
+var x3=cx+r*ir/100*Math.cos(ea),y3=cy+r*ir/100*Math.sin(ea),x4=cx+r*ir/100*Math.cos(sa),y4=cy+r*ir/100*Math.sin(sa);
+var lg=theta>180?1:0;
+var d=ir>0?"M"+x1+","+y1+" A"+r+","+r+" 0 "+lg+",1 "+x2+","+y2+" L"+x3+","+y3+" A"+(r*ir/100)+","+(r*ir/100)+" 0 "+lg+",0 "+x4+","+y4+" Z":"M"+cx+","+cy+" L"+x1+","+y1+" A"+r+","+r+" 0 "+lg+",1 "+x2+","+y2+" Z";
+paths+='<path d="'+d+'" fill="'+item.color+'"/>';
+if(ir>0){
+var mx=cx+(r+r*ir/100)/2*Math.cos((a+theta/2)*Math.PI/180);
+var my=cy+(r+r*ir/100)/2*Math.sin((a+theta/2)*Math.PI/180);
+paths+='<text x="'+mx+'" y="'+(my+4)+'" text-anchor="middle" fill="#fff" font-size="11" font-weight="600" font-family="Inter,sans-serif">'+Math.round(item.value/total*100)+'%</text>';
+}
+a+=theta;
+});
+if(ir>0){
+var legY=H-28,totalW=items.length*110,startX=(W-totalW)/2;
+items.forEach(function(item,i){leg+='<rect x="'+(startX+i*110)+'" y="'+legY+'" width="8" height="8" rx="4" fill="'+item.color+'"/><text x="'+(startX+i*110+12)+'" y="'+(legY+9)+'" fill="'+TX+'" font-size="11" font-family="Inter,sans-serif">'+item.label+'</text>';});
+}
+document.getElementById(id).innerHTML='<svg width="100%" height="100%" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">'+paths+leg+'</svg>';
+}
+
+function barHChart(id,W,H,opts){
+var labels=opts.labels,values=opts.values,colors=opts.colors,fmt=opts.fmt;
+var pad={t:12,r:55,b:12,l:110};
+var w=W-pad.l-pad.r,h=H-pad.t-pad.b;
+var max=Math.max.apply(null,values)*1.1;
+var bH=Math.min(24,h/labels.length-8);
+var grid="",bars="";
+for(var i=0;i<=4;i++){
+var x=pad.l+(i/4)*w;
+grid+='<line x1="'+x+'" y1="'+pad.t+'" x2="'+x+'" y2="'+(pad.t+h)+'" stroke="'+GR+'" stroke-width="1"/>';
+  grid+='<text x="'+x+'" y="'+(pad.t+h+16)+'" text-anchor="middle" fill="'+TX+'" font-size="10" font-family="Inter,sans-serif">'+(fmt?fmt((i/4)*max):Math.round((i/4)*max))+CL;
+}
+labels.forEach(function(label,i){
+var y=pad.t+i*h/labels.length+(h/labels.length-bH)/2;
+var bw=(values[i]/max)*w;
+bars+='<rect x="'+pad.l+'" y="'+y+'" width="'+bw+'" height="'+bH+'" rx="0" ry="4" fill="'+colors[i]+'"/>';
+bars+='<text x="'+(pad.l+bw+5)+'" y="'+(y+bH/2+4)+'" fill="'+TX+'" font-size="10" font-family="Inter,sans-serif">'+(fmt?fmt(values[i]):values[i])+'</text>';
+bars+='<text x="'+(pad.l-6)+'" y="'+(y+bH/2+4)+'" text-anchor="end" fill="'+TX+'" font-size="11" font-family="Inter,sans-serif">'+label+'</text>';
+});
+document.getElementById(id).innerHTML='<svg width="100%" height="100%" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">'+grid+bars+'</svg>';
+}
+
+// Category Revenue
+barChart("categoryRevChart",660,300,{labels:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],datasets:[{data:[28400,31200,34600,32800,37800,41200,36500,39800,43500,46800,51200,38200],color:B},{data:[19600,21400,23800,22100,25800,28400,24800,27100,29800,32400,35600,26100],color:P}]});
+
+// Category Share
+pieChart("categoryShareChart",300,300,{innerR:62,items:[{label:"Electronics",value:38,color:P},{label:"Fashion",value:24,color:B},{label:"Beauty",value:16,color:PU},{label:"Home & Kitchen",value:14,color:G},{label:"Sports",value:8,color:Y}]});
+
+// Units Sold by Category
+lineChart("unitsChart",500,280,{labels:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],data:[12800,14200,15900,14600,16800,18200,16400,17800,19100,20800,22400,16800],color:P,legend:"Units",fmt:function(v){return(v/1000).toFixed(1)+"K";}});
+
+// Product Ratings
+barHChart("ratingsChart",460,280,{labels:["Electronics","Beauty","Home & Kitchen","Fashion","Sports"],values:[4.6,4.8,4.2,4.4,3.9],colors:[P,B,G,PU,Y],fmt:function(v){return v.toFixed(1)+" ★";}});
+
+// Gross Margin
+pieChart("marginChart",200,200,{innerR:62,items:[{label:"Electronics",value:38,color:P},{label:"Fashion",value:26,color:B},{label:"Beauty",value:22,color:PU},{label:"Home",value:14,color:G}]});
+
+// Return Rate
+barHChart("returnChart",280,200,{labels:["Beauty","Fashion","Home","Electronics","Sports"],values:[8.4,6.2,3.8,2.1,4.6],colors:[PU,B,G,P,Y],fmt:function(v){return v+"%";}});
+
+// Lifecycle
+pieChart("lifecycleChart",200,200,{innerR:62,items:[{label:"Active",value:72,color:P},{label:"New",value:15,color:B},{label:"Phasing Out",value:8,color:Y},{label:"Discontinued",value:5,color:PU}]});
+  </script>
+</body>
+</html>

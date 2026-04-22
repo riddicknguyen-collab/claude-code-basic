@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Dashboard</title>
+  <link rel="icon" href="data:,">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = { theme: { extend: { colors: { dark: { bg: '#090A14', card: '#13152A', border: '#1E2138', muted: '#2A2D47' }, primary: '#DF6B33', primaryHover: '#C85A27' }, fontFamily: { poppins: ['Poppins', 'sans-serif'], inter: ['Inter', 'sans-serif'] } } } }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background-color: #090A14; }
+    .card { background-color: #13152A; border: 1px solid #1E2138; border-radius: 1rem; padding: 1.5rem; }
+    .kpi-card { background-color: #13152A; border: 1px solid #1E2138; border-radius: 1rem; padding: 1.5rem; transition: border-color 0.2s; }
+    .kpi-card:hover { border-color: #DF6B33; }
+    .table-row:hover { background-color: rgba(223, 107, 51, 0.05); }
+    .table-header { border-bottom: 1px solid #1E2138; }
+    .table-header th { color: #6B7280; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .badge-green { background-color: rgba(34, 197, 94, 0.15); color: #22C55E; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; }
+    .badge-red { background-color: rgba(239, 68, 68, 0.15); color: #EF4444; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; }
+    .badge-orange { background-color: rgba(223, 107, 51, 0.15); color: #DF6B33; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; }
+    .badge-blue { background-color: rgba(59, 130, 246, 0.15); color: #3B82F6; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; }
+    nav a.active { color: #DF6B33; border-bottom: 2px solid #DF6B33; }
+    nav a:hover { color: #DF6B33; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #090A14; }
+    ::-webkit-scrollbar-thumb { background: #1E2138; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2A2D47; }
+    svg text { user-select: none; }
+  </style>
+</head>
+<body class="min-h-screen font-inter" style="background-color: #090A14;">
+
+  <nav class="sticky top-0 z-50 border-b" style="background-color: rgba(19,21,42,0.95); border-color: #1E2138; backdrop-filter: blur(12px);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-14">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: #DF6B33;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+          <span class="font-poppins font-bold text-white text-lg">SalesDash</span>
+        </div>
+        <div class="hidden sm:flex items-center gap-1">
+          <a href="charts.html" class="px-3 py-2 text-sm font-medium transition-colors text-gray-400">Overview</a>
+          <a href="sales.html" class="active px-3 py-2 text-sm font-medium transition-colors" style="color: #DF6B33;">Sales</a>
+          <a href="marketing.html" class="px-3 py-2 text-sm font-medium transition-colors text-gray-400">Marketing</a>
+          <a href="products.html" class="px-3 py-2 text-sm font-medium transition-colors text-gray-400">Products</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-gray-500 hidden sm:block">Jan — Dec 2025</span>
+          <button class="p-2 rounded-lg transition-colors" style="background-color: #1A1D33; color: #9CA3AF;" title="Download Report"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8"><h1 class="font-poppins text-2xl font-extrabold text-white">Sales Dashboard</h1><p class="text-gray-400 text-sm mt-1">Revenue performance, team metrics, and regional analysis for 2025</p></div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="kpi-card"><div class="flex items-center justify-between mb-3"><span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Total Sales</span><div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(223,107,51,0.15);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DF6B33" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div></div><p class="font-poppins text-2xl font-bold text-white">$4,231,580</p><div class="flex items-center gap-1 mt-2"><span class="badge-green">+15.8%</span><span class="text-xs text-gray-500">vs last year</span></div></div>
+      <div class="kpi-card"><div class="flex items-center justify-between mb-3"><span class="text-xs font-medium text-gray-500 uppercase tracking-wide">New Customers</span><div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(59,130,246,0.15);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div></div><p class="font-poppins text-2xl font-bold text-white">7,743</p><div class="flex items-center gap-1 mt-2"><span class="badge-green">+11.2%</span><span class="text-xs text-gray-500">vs last year</span></div></div>
+      <div class="kpi-card"><div class="flex items-center justify-between mb-3"><span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Repeat Rate</span><div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(34,197,94,0.15);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22C55E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div></div><p class="font-poppins text-2xl font-bold text-white">38.4%</p><div class="flex items-center gap-1 mt-2"><span class="badge-green">+4.1%</span><span class="text-xs text-gray-500">vs last year</span></div></div>
+      <div class="kpi-card"><div class="flex items-center justify-between mb-3"><span class="text-xs font-medium text-gray-500 uppercase tracking-wide">Avg Deal Size</span><div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: rgba(168,85,247,0.15);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A855F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div></div><p class="font-poppins text-2xl font-bold text-white">$229.50</p><div class="flex items-center gap-1 mt-2"><span class="badge-red">-2.1%</span><span class="text-xs text-gray-500">vs last year</span></div></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div class="lg:col-span-2 card">
+        <div class="flex items-center justify-between mb-6"><div><h2 class="font-poppins font-bold text-white text-base">Sales Performance</h2><p class="text-gray-500 text-xs mt-0.5">Quarterly revenue vs target (in $K)</p></div><div class="flex items-center gap-4"><div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full" style="background-color:#3B82F6;"></div><span class="text-xs text-gray-500">Actual</span></div><div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full" style="background-color:#DF6B33;"></div><span class="text-xs text-gray-500">Target</span></div></div></div>
+        <div id="salesPerfChart" style="height:300px;position:relative;"></div>
+      </div>
+      <div class="card"><div class="mb-6"><h2 class="font-poppins font-bold text-white text-base">Sales by Region</h2><p class="text-gray-500 text-xs mt-0.5">Revenue breakdown by geography</p></div><div id="salesRegionChart" style="height:300px;position:relative;"></div></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div class="card">
+        <div class="flex items-center justify-between mb-6"><div><h2 class="font-poppins font-bold text-white text-base">Sales Pipeline</h2><p class="text-gray-500 text-xs mt-0.5">Deals by stage</p></div><span class="badge-orange">$1.8M total</span></div>
+        <div id="pipelineChart" style="height:280px;position:relative;"></div>
+      </div>
+      <div class="card overflow-hidden">
+        <div class="flex items-center justify-between mb-4"><div><h2 class="font-poppins font-bold text-white text-base">Top Sales Reps</h2><p class="text-gray-500 text-xs mt-0.5">Ranked by total sales closed</p></div><a href="#" class="text-xs font-medium" style="color:#DF6B33;">View team</a></div>
+        <div class="overflow-x-auto"><table class="w-full text-sm"><thead class="table-header"><tr><th class="text-left py-3 px-3 font-medium">Rep</th><th class="text-right py-3 px-3 font-medium">Sales</th><th class="text-right py-3 px-3 font-medium">Deals</th><th class="text-right py-3 px-3 font-medium">Quota</th></tr></thead><tbody>
+          <tr class="table-row border-b" style="border-color:#1E2138;"><td class="py-3 px-3"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: rgba(223,107,51,0.2);"><span class="text-xs font-bold" style="color:#DF6B33;">SC</span></div><div><p class="text-white font-medium text-xs">Sarah Chen</p><p class="text-gray-500 text-xs">Senior AE</p></div></div></td><td class="py-3 px-3 text-right text-white font-medium text-xs">$412,850</td><td class="py-3 px-3 text-right text-gray-400 text-xs">94</td><td class="py-3 px-3 text-right"><span class="badge-green">112%</span></td></tr>
+          <tr class="table-row border-b" style="border-color:#1E2138;"><td class="py-3 px-3"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: rgba(59,130,246,0.2);"><span class="text-xs font-bold" style="color:#3B82F6;">MJ</span></div><div><p class="text-white font-medium text-xs">Marcus Johnson</p><p class="text-gray-500 text-xs">Account Exec</p></div></div></td><td class="py-3 px-3 text-right text-white font-medium text-xs">$389,200</td><td class="py-3 px-3 text-right text-gray-400 text-xs">87</td><td class="py-3 px-3 text-right"><span class="badge-green">105%</span></td></tr>
+          <tr class="table-row border-b" style="border-color:#1E2138;"><td class="py-3 px-3"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: rgba(34,197,94,0.2);"><span class="text-xs font-bold" style="color:#22C55E;">EW</span></div><div><p class="text-white font-medium text-xs">Elena Williams</p><p class="text-gray-500 text-xs">Sales Rep</p></div></div></td><td class="py-3 px-3 text-right text-white font-medium text-xs">$341,600</td><td class="py-3 px-3 text-right text-gray-400 text-xs">78</td><td class="py-3 px-3 text-right"><span class="badge-green">98%</span></td></tr>
+          <tr class="table-row border-b" style="border-color:#1E2138;"><td class="py-3 px-3"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: rgba(168,85,247,0.2);"><span class="text-xs font-bold" style="color:#A855F7;">DP</span></div><div><p class="text-white font-medium text-xs">David Park</p><p class="text-gray-500 text-xs">Account Exec</p></div></div></td><td class="py-3 px-3 text-right text-white font-medium text-xs">$298,750</td><td class="py-3 px-3 text-right text-gray-400 text-xs">65</td><td class="py-3 px-3 text-right"><span class="badge-orange">91%</span></td></tr>
+          <tr class="table-row" style="border-color:#1E2138;"><td class="py-3 px-3"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: rgba(245,158,11,0.2);"><span class="text-xs font-bold" style="color:#F59E0B;">LT</span></div><div><p class="text-white font-medium text-xs">Lisa Thompson</p><p class="text-gray-500 text-xs">Sales Rep</p></div></div></td><td class="py-3 px-3 text-right text-white font-medium text-xs">$276,300</td><td class="py-3 px-3 text-right text-gray-400 text-xs">59</td><td class="py-3 px-3 text-right"><span class="badge-red">84%</span></td></tr>
+        </tbody></table></div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div class="card">
+        <div class="flex items-center justify-between mb-6"><div><h2 class="font-poppins font-bold text-white text-base">Monthly Win Rate</h2><p class="text-gray-500 text-xs mt-0.5">Closed deals vs total opportunities</p></div><span class="badge-blue">Avg: 28.4%</span></div>
+        <div id="winRateChart" style="height:260px;position:relative;"></div>
+      </div>
+      <div class="card">
+        <div class="flex items-center justify-between mb-6"><div><h2 class="font-poppins font-bold text-white text-base">Revenue by Payment Method</h2><p class="text-gray-500 text-xs mt-0.5">Transaction volume breakdown</p></div></div>
+        <div id="paymentChart" style="height:260px;position:relative;"></div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="card"><h2 class="font-poppins font-bold text-white text-base mb-1">Sales Cycle</h2><p class="text-gray-500 text-xs mb-4">Average days to close</p><div id="cycleChart" style="height:200px;position:relative;"></div></div>
+      <div class="card"><h2 class="font-poppins font-bold text-white text-base mb-1">Customer Segments</h2><p class="text-gray-500 text-xs mb-4">Revenue by segment</p><div id="segmentChart" style="height:200px;position:relative;"></div></div>
+      <div class="card"><h2 class="font-poppins font-bold text-white text-base mb-1">Discount Analysis</h2><p class="text-gray-500 text-xs mb-4">Avg discount given</p><div id="discountChart" style="height:200px;position:relative;"></div></div>
+    </div>
+  </main>
+
+  <script>
+var P='#DF6B33',B='#3B82F6',CL='</text>',TQ='"',G="#22C55E",PU="#A855F7",Y="#F59E0B",C2="#06B6D4",GR="#1E2138",TX="#9CA3AF";
+
+function lineChart(id,W,H,opts){
+var data=opts.data,labels=opts.labels;
+var pad={t:24,r:20,b:44,l:58};
+var w=W-pad.l-pad.r,h=H-pad.t-pad.b;
+var max=Math.max.apply(null,data)*1.12;
+var grid="",paths="",xLabs="",legend="";
+for(var i=0;i<=5;i++){
+var y=pad.t+(i/5)*h;
+var val=max-(i/5)*max;
+grid+='<line x1="'+pad.l+'" y1="'+y+'" x2="'+(pad.l+w)+'" y2="'+y+'" stroke="'+GR+'" stroke-width="1"/>';
+  grid+='<text x="'+(pad.l-6)+'" y="'+(y+4)+'" text-anchor="end" fill="'+TX+'" font-size="10" font-family="Inter,sans-serif">'+(opts.fmt?opts.fmt(val):Math.round(val))+CL;
+}
+var pts=data.map(function(v,i){return (pad.l+(i/(data.length-1))*w+','+(pad.t+h-(v/max)*h));}).join(' ');
+paths+='<polyline points="'+pts+'" fill="none" stroke="'+opts.color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+data.forEach(function(v,i){
+var cx=pad.l+(i/(data.length-1))*w,cy=pad.t+h-(v/max)*h;
+paths+='<circle cx="'+cx+'" cy="'+cy+'" r="3.5" fill="'+opts.color+'" stroke="#1A1D33" stroke-width="2"/>';
+});
+labels.forEach(function(l,i){if(data.length<=6||i%2===0)xLabs+='<text x="'+(pad.l+(i/(data.length-1))*w)+'" y="'+(pad.t+h+18)+'" text-anchor="middle" fill="'+TX+'" font-size="10" font-family="Inter,sans-serif">'+l+'</text>';});
+if(opts.legend){legend='<line x1="'+pad.l+'" y1="'+(pad.t-12)+'" x2="'+(pad.l+14)+'" y2="'+(pad.t-12)+'" stroke="'+opts.color+'" stroke-width="2.5"/><text x="'+(pad.l+18)+'" y="'+(pad.t-8)+'" fill="'+TX+'" font-size="11" font-family="Inter,sans-serif">'+opts.legend+'</text>';}
+document.getElementById(id).innerHTML='<svg width="100%" height="100%" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">'+grid+paths+xLabs+legend+'</svg>';
+}
+
+function barChart(id,W,H,opts){
+var labels=opts.labels,datasets=opts.datasets;
+var pad={t:12,r:12,b:44,l:12};
+var w=W-pad.l-pad.r,h=H-pad.t-pad.b;
+var max=Math.max.apply(null,datasets.map(function(d){return Math.max.apply(null,d.data);}))*1.1;
+var gW=w/labels.length,bW=(gW*0.7)/datasets.length;
+var grid="",bars="";
+for(var i=0;i<=5;i++){
+var y=pad.t+(i/5)*h;
+grid+='<line x1="'+pad.l+'" y1="'+y+'" x2="'+(pad.l+w)+'" y2="'+y+'" stroke="'+GR+'" stroke-width="1"/>';
+grid+='<text x="'+(pad.l-4)+'" y="'+(y+4)+'" text-anchor="end" fill="'+TX+'" font-size="10" font-family="Inter,sans-serif">'+(max-(i/5)*max).toFixed(0)+'</text>';
+}
+labels.forEach(function(l,li){
+var gx=pad.l+li*gW+gW*0.15;
+datasets.forEach(function(ds,di){
+var bh=(ds.data[li]/max)*h;
+bars+='<rect x="'+(gx+di*bW)+'" y="'+(pad.t+h-bh)+'" width="'+(bW-2)+'" height="'+bh+'" rx="4" fill="'+ds.color+'"/>';
+});
+bars+='<text x="'+(gx+(datasets.length*bW)/2)+'" y="'+(pad.t+h+18)+'" text-anchor="middle" fill="'+TX+'" font-size="10" font-family="Inter,sans-serif">'+l+'</text>';
+});
+document.getElementById(id).innerHTML='<svg width="100%" height="100%" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">'+grid+bars+'</svg>';
+}
+
+function pieChart(id,W,H,opts){
+var items=opts.items,ir=opts.innerR||0;
+var cx=W/2,cy=ir>0?H/2-20:H/2;
+var r=Math.min(cx,cy)-10;
+var total=items.reduce(function(s,i){return s+i.value;},0);
+var paths="",leg="",a=-90;
+items.forEach(function(item){
+var theta=(item.value/total)*360;
+var sa=a*Math.PI/180,ea=(a+theta)*Math.PI/180;
+var x1=cx+r*Math.cos(sa),y1=cy+r*Math.sin(sa),x2=cx+r*Math.cos(ea),y2=cy+r*Math.sin(ea);
+var x3=cx+r*ir/100*Math.cos(ea),y3=cy+r*ir/100*Math.sin(ea),x4=cx+r*ir/100*Math.cos(sa),y4=cy+r*ir/100*Math.sin(sa);
+var lg=theta>180?1:0;
+var d=ir>0?"M"+x1+","+y1+" A"+r+","+r+" 0 "+lg+",1 "+x2+","+y2+" L"+x3+","+y3+" A"+(r*ir/100)+","+(r*ir/100)+" 0 "+lg+",0 "+x4+","+y4+" Z":"M"+cx+","+cy+" L"+x1+","+y1+" A"+r+","+r+" 0 "+lg+",1 "+x2+","+y2+" Z";
+paths+='<path d="'+d+'" fill="'+item.color+'"/>';
+if(ir>0){
+var mx=cx+(r+r*ir/100)/2*Math.cos((a+theta/2)*Math.PI/180);
+var my=cy+(r+r*ir/100)/2*Math.sin((a+theta/2)*Math.PI/180);
+paths+='<text x="'+mx+'" y="'+(my+4)+'" text-anchor="middle" fill="#fff" font-size="11" font-weight="600" font-family="Inter,sans-serif">'+Math.round(item.value/total*100)+'%</text>';
+}
+a+=theta;
+});
+if(ir>0){
+var legY=H-28,totalW=items.length*110,startX=(W-totalW)/2;
+items.forEach(function(item,i){leg+='<rect x="'+(startX+i*110)+'" y="'+legY+'" width="8" height="8" rx="4" fill="'+item.color+'"/><text x="'+(startX+i*110+12)+'" y="'+(legY+9)+'" fill="'+TX+'" font-size="11" font-family="Inter,sans-serif">'+item.label+'</text>';});
+}
+document.getElementById(id).innerHTML='<svg width="100%" height="100%" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">'+paths+leg+'</svg>';
+}
+
+function barHChart(id,W,H,opts){
+var labels=opts.labels,values=opts.values,colors=opts.colors,fmt=opts.fmt;
+var pad={t:12,r:55,b:12,l:100};
+var w=W-pad.l-pad.r,h=H-pad.t-pad.b;
+var max=Math.max.apply(null,values)*1.1;
+var bH=Math.min(24,h/labels.length-8);
+var grid="",bars="";
+for(var i=0;i<=4;i++){
+var x=pad.l+(i/4)*w;
+grid+='<line x1="'+x+'" y1="'+pad.t+'" x2="'+x+'" y2="'+(pad.t+h)+'" stroke="'+GR+'" stroke-width="1"/>';
+  grid+='<text x="'+x+'" y="'+(pad.t+h+16)+'" text-anchor="middle" fill="'+TX+'" font-size="10" font-family="Inter,sans-serif">'+(fmt?fmt((i/4)*max):Math.round((i/4)*max))+CL;
+}
+labels.forEach(function(label,i){
+var y=pad.t+i*h/labels.length+(h/labels.length-bH)/2;
+var bw=(values[i]/max)*w;
+bars+='<rect x="'+pad.l+'" y="'+y+'" width="'+bw+'" height="'+bH+'" rx="0" ry="4" fill="'+colors[i]+'"/>';
+bars+='<text x="'+(pad.l+bw+5)+'" y="'+(y+bH/2+4)+'" fill="'+TX+'" font-size="10" font-family="Inter,sans-serif">'+(fmt?fmt(values[i]):values[i])+'</text>';
+bars+='<text x="'+(pad.l-6)+'" y="'+(y+bH/2+4)+'" text-anchor="end" fill="'+TX+'" font-size="11" font-family="Inter,sans-serif">'+label+'</text>';
+});
+document.getElementById(id).innerHTML='<svg width="100%" height="100%" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">'+grid+bars+'</svg>';
+}
+
+// Sales Performance: Actual vs Target (quarterly, in $K)
+barChart("salesPerfChart",660,300,{labels:["Q1","Q2","Q3","Q4"],datasets:[{data:[980,1100,1250,1520],color:B},{data:[900,1050,1200,1500],color:P}]});
+
+// Sales by Region
+pieChart("salesRegionChart",300,300,{innerR:62,items:[{label:"North America",value:1520,color:P},{label:"Europe",value:1080,color:B},{label:"Asia Pacific",value:920,color:PU},{label:"Latin America",value:420,color:G},{label:"Middle East",color:Y,value:191}]});
+
+// Sales Pipeline
+barHChart("pipelineChart",460,280,{labels:["Lead","Qualified","Proposal","Negotiation","Closed Won"],values:[485000,320000,275000,198000,412850],colors:[C2,G,B,Y,P],fmt:function(v){return"$"+(v/1000).toFixed(0)+"K";}});
+
+// Win Rate
+lineChart("winRateChart",500,260,{labels:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],data:[24,26,28,25,30,29,31,27,32,30,28,29],color:P,legend:"Win Rate %",fmt:function(v){return v.toFixed(0)+"%";}});
+
+// Payment Methods
+pieChart("paymentChart",280,260,{innerR:62,items:[{label:"Credit Card",value:42,color:P},{label:"PayPal",value:24,color:B},{label:"Bank Transfer",value:16,color:PU},{label:"Apple Pay",value:11,color:G},{label:"Other",value:7,color:Y}]});
+
+// Sales Cycle
+pieChart("cycleChart",200,200,{innerR:62,items:[{label:"< 30 days",value:35,color:P},{label:"30-60 days",value:28,color:B},{label:"> 60 days",value:37,color:PU}]});
+
+// Customer Segments
+barHChart("segmentChart",280,200,{labels:["Enterprise","Mid-Market","SMB","Startup","Consumer"],values:[1687200,1042800,756000,486000,258000],colors:[P,B,PU,G,Y],fmt:function(v){return"$"+(v/1000).toFixed(0)+"K";}});
+
+// Discount Analysis
+barHChart("discountChart",280,200,{labels:["Electronics","Fashion","Beauty","Home","Sports"],values:[8.2,15.4,11.8,9.6,13.2],colors:[P,B,PU,G,Y],fmt:function(v){return v+"%";}});
+  </script>
+</body>
+</html>
